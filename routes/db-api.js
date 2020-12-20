@@ -14,8 +14,6 @@ router.get("/ping", (req, res) => {
 
 router.post("/create/event", (req, res) => {
   const { name, description, owner } = req.body;
-  console.log(name, description, owner);
-  //   res.status(200).send({ msg: "events" });
   models.Event.findOrCreate({
     where: Sequelize.and({ event_name: name }, { event_owner: owner }),
     defaults: {
@@ -25,9 +23,9 @@ router.post("/create/event", (req, res) => {
     },
   }).then(([event, created]) => {
     if (created) {
-      res.json({ msg: "New event created", event_created: event });
+      res.status(200).send({ msg: "New event created", event_created: event });
     } else {
-      res.json({
+      res.status(400).send({
         msg: "Event already exists with that name",
         event_existing: event,
       });
@@ -47,35 +45,37 @@ router.get("/update/event", (req, res) => {
 
 router.post("/update/event", (req, res) => {
   const { name, description, owner } = req.body;
-  if (name && description && owner) {
-    // Update name or desc
-    models.Event.update(
-      { event_name: name, event_description: description },
-      {
-        where: { event_name: name, event_owner: owner },
-      }
-    ).then(() => {
-      // return update group as JSON
-      models.Event.findOne({
-        where: { event_name: name, event_owner: owner },
-      }).then((event) => {
-        res.json({ event: event, msg: `Updated event: ${name}` });
-      });
+  // Update name or desc
+  models.Event.update(
+    { event_name: name, event_description: description },
+    {
+      where: { event_name: name, event_owner: owner },
+    }
+  ).then(() => {
+    // return update group as JSON
+    models.Event.findOne({
+      where: { event_name: name, event_owner: owner },
+    }).then((event) => {
+      res.json({ event: event, msg: `Updated event: ${name}` });
     });
-  } else {
-    res.json({
-      error:
-        "Invalid name, description, or owner. Cannot query without required body parameters.",
-    });
-  }
+  });
 });
 
 router.get("/destroy/event", (req, res) => {
   const { name, owner } = req.body;
-  // if (name && owner) {
-
-  // }
-  res.json({ msg: "Current path for destroying event" });
+  models.Event.destroy({
+    where: { event_name: name, event_owner: owner },
+  }).then((deleted) => {
+    if (deleted) {
+      res.status(200).send({ msg: `Successfully deleted: ${name}` });
+    } else {
+      res
+        .status(200)
+        .send({
+          msg: `Group: ${name} does not exist or is missing correct parameter. `,
+        });
+    }
+  });
 });
 
 module.exports = router;

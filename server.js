@@ -11,7 +11,12 @@ const app = express();
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
+// Middleware error check
+app.use("/db_api/create/event", middleware.eventCreateErrors);
 app.use("/db_api/update/event", middleware.eventUpdateErrors);
+app.use("/db_api/destroy/event", middleware.eventDestroyErrors);
+
+// Import router functions
 app.use("/db_api/", DB_API);
 
 app.listen(3000, () => {
