@@ -41,24 +41,33 @@ router.get("/read/event", (req, res) => {
   });
 });
 
+/*@desc GRABS ONE EVENT FROM DB 
+ @route GET /db_api/read/event/id*/
+router.get("/read/event", (req, res) => {
+  models.Event.findAll().then((events) => {
+    res.status(200).send({ events: events });
+  });
+});
+
 /*@desc UPDATE 1 EVENT REQUIRES: NAME & OWNER 
  @route POST /db_api/update/event */
 router.post("/update/event", (req, res) => {
-  const { name, description, owner } = req.body;
-  // Update name or desc
-  models.Event.update(
-    { event_name: name, event_description: description },
-    {
-      where: { event_name: name, event_owner: owner },
-    }
-  ).then(() => {
-    // return update group as JSON
-    models.Event.findOne({
-      where: { event_name: name, event_owner: owner },
-    }).then((event) => {
-      res.json({ event: event, msg: `Updated event: ${name}` });
-    });
-  });
+  res.status(200).send({ msg: "Test successful!" });
+  // const { name, description, owner } = req.body;
+  // // Update name or desc
+  // models.Event.update(
+  //   { event_name: name, event_description: description },
+  //   {
+  //     where: { event_name: name, event_owner: owner },
+  //   }
+  // ).then(() => {
+  //   // return update group as JSON
+  //   models.Event.findOne({
+  //     where: { event_name: name, event_owner: owner },
+  //   }).then((event) => {
+  //     res.json({ event: event, msg: `Updated event: ${name}` });
+  //   });
+  // });
 });
 
 router.get("/destroy/event/:id", (req, res) => {
