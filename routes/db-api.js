@@ -36,7 +36,7 @@ router.post("/create/event", (req, res) => {
 
 /*@desc GRABS ALL EVENTS FROM DB 
  @route GET /db_api/read/events*/
-router.get("/read/event", (req, res) => {
+router.get("/read/events", (req, res) => {
   models.Event.findAll().then((events) => {
     res.status(200).send({ events: events });
   });
@@ -44,10 +44,25 @@ router.get("/read/event", (req, res) => {
 
 /*@desc GRABS ONE EVENT FROM DB 
  @route GET /db_api/read/event/id*/
-router.get("/read/event", (req, res) => {
-  models.Event.findAll().then((events) => {
-    res.status(200).send({ events: events });
-  });
+router.get("/read/event/:id", (req, res) => {
+  if (req.params.id) {
+    models.Event.findOne({ where: { event_id: req.params.id } })
+      .then((event) => {
+        if (event) {
+          res.status(200).send({
+            event: event,
+            msg: "Successfully found an event with id passed",
+          });
+        } else {
+          res.status(200).send({ msg: "Could not find event with id passed" });
+        }
+      })
+      .catch((err) => {
+        res.status(200).send({ msg: err, extra: "This is err" });
+      });
+  } else {
+    res.status(200).send({ msg: "Invalid event id passed. " });
+  }
 });
 
 /*@desc UPDATE 1 EVENT REQUIRES: NAME & OWNER 
