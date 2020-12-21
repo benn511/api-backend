@@ -1,4 +1,5 @@
 const express = require("express");
+const url = require("url");
 const bodyParser = require("body-parser");
 const Sequelize = require("sequelize");
 const sequelize = new Sequelize({ dialect: "sqlite", storage: "db.sqlite" });
@@ -52,22 +53,29 @@ router.get("/read/event", (req, res) => {
 /*@desc UPDATE 1 EVENT REQUIRES: NAME & OWNER 
  @route POST /db_api/update/event */
 router.post("/update/event", (req, res) => {
-  res.status(200).send({ msg: "Test successful!" });
-  // const { name, description, owner } = req.body;
-  // // Update name or desc
-  // models.Event.update(
-  //   { event_name: name, event_description: description },
-  //   {
-  //     where: { event_name: name, event_owner: owner },
-  //   }
-  // ).then(() => {
-  //   // return update group as JSON
-  //   models.Event.findOne({
-  //     where: { event_name: name, event_owner: owner },
-  //   }).then((event) => {
-  //     res.json({ event: event, msg: `Updated event: ${name}` });
-  //   });
-  // });
+  //Destructure out params for query
+  const { id, owner, name, description } = url.parse(req.url, true).query;
+
+  // Update specific event to new changes
+  models.Event.update(
+    { event_name: name, event_description: description, event_owner: owner },
+    {
+      where: { event_id: id },
+    }
+  ).then(() => {
+    // return update group as JSON
+    models.Event.findOne({
+      where: { event_id: id },
+    }).then((event) => {
+      if (event) {
+        res
+          .status(200)
+          .send({ event: event, msg: `Updated event: ${event.name}` });
+      } else {
+        res.status(200).send({ msg: `Could not find event with id: ${id}` });
+      }
+    });
+  });
 });
 
 router.get("/destroy/event/:id", (req, res) => {
