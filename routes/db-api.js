@@ -23,26 +23,26 @@ router.post("/create/event", (req, res) => {
     },
   }).then(([event, created]) => {
     if (created) {
-      res.status(200).send({ msg: "New event created", event_created: event });
+      res.status(200).send({ msg: "New event created", event: event });
     } else {
-      res.status(400).send({
+      res.status(200).send({
         msg: "Event already exists with that name",
-        event_existing: event,
+        event: event,
       });
     }
   });
 });
 
+/*@desc GRABS ALL EVENTS FROM DB 
+ @route GET /db_api/read/events*/
 router.get("/read/event", (req, res) => {
   models.Event.findAll().then((events) => {
     res.status(200).send({ events: events });
   });
 });
 
-router.get("/update/event", (req, res) => {
-  res.json({ msg: "Update path" });
-});
-
+/*@desc UPDATE 1 EVENT REQUIRES: NAME & OWNER 
+ @route POST /db_api/update/event */
 router.post("/update/event", (req, res) => {
   const { name, description, owner } = req.body;
   // Update name or desc
@@ -61,21 +61,25 @@ router.post("/update/event", (req, res) => {
   });
 });
 
-router.get("/destroy/event", (req, res) => {
-  const { name, owner } = req.body;
-  models.Event.destroy({
-    where: { event_name: name, event_owner: owner },
-  }).then((deleted) => {
-    if (deleted) {
-      res.status(200).send({ msg: `Successfully deleted: ${name}` });
-    } else {
-      res
-        .status(200)
-        .send({
-          msg: `Group: ${name} does not exist or is missing correct parameter. `,
+router.get("/destroy/event/:id", (req, res) => {
+  const id = req.params.id;
+  if (id) {
+    models.Event.destroy({
+      where: { event_id: id },
+    }).then((numDeleted) => {
+      if (numDeleted) {
+        res
+          .status(200)
+          .send({ msg: `Successfully deleted event with id: ${id}` });
+      } else {
+        res.status(200).send({
+          msg: `event_id: ${id} does not exist. `,
         });
-    }
-  });
+      }
+    });
+  } else {
+    res.status(200).send({ msg: "Cannot delete without id." });
+  }
 });
 
 module.exports = router;
