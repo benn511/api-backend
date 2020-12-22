@@ -1,11 +1,15 @@
 const url = require("url");
 const eventCreateErrors = (req, res, next) => {
-  const { name, description, owner } = req.body;
   console.log("Passing through create errors");
+  const { name, description, owner } = req.body;
   if (name && description && owner) {
     next();
   } else {
-    res.status(200).send({ msg: "Problem with body parameters. Retry." });
+    let errors = "Problem with body parameters. Missing JSON data. ";
+    if (!name) errors += " Missing name. ";
+    if (!description) errors += "Missing description. ";
+    if (!owner) errors += "Missing owner. ";
+    res.status(200).send({ msg: errors });
   }
 };
 
@@ -14,15 +18,6 @@ const eventUpdateErrors = (req, res, next) => {
   const { id, owner, name, description } = url.parse(req.url, true).query;
   // I need an id for sure
   if (id && (owner || name || description)) {
-    // res
-    //   .status(200)
-    //   .send({
-    //     msg: "Successful request to update",
-    //     id: id,
-    //     owner: owner,
-    //     name: name,
-    //     description: description,
-    //   });
     next();
   } else if (id) {
     res.status(200).send({

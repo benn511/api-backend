@@ -83,9 +83,10 @@ router.post("/update/event", (req, res) => {
       where: { event_id: id },
     }).then((event) => {
       if (event) {
-        res
-          .status(200)
-          .send({ event: event, msg: `Updated event: ${event.name}` });
+        res.status(200).send({
+          event: event,
+          msg: `Updated event with id: ${event.event_id}, Name: ${event.event_name}`,
+        });
       } else {
         res.status(200).send({ msg: `Could not find event with id: ${id}` });
       }
@@ -93,6 +94,16 @@ router.post("/update/event", (req, res) => {
   });
 });
 
+/*@desc Error check 
+ @route GET /db_api/destroy/event/ */
+router.get("/destroy/event/", (req, res) => {
+  res
+    .status(200)
+    .send({ msg: "Missing parameter. Please pass an id to delete event." });
+});
+
+/*@desc Deletes an entry from DB 
+ @route GET /db_api/destroy/event/:id */
 router.get("/destroy/event/:id", (req, res) => {
   const id = req.params.id;
   if (id) {
