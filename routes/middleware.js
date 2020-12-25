@@ -9,7 +9,7 @@ const eventCreateErrors = (req, res, next) => {
     if (!name) errors += " Missing name. ";
     if (!description) errors += "Missing description. ";
     if (!owner) errors += "Missing owner. ";
-    res.status(200).send({ msg: errors });
+    res.status(200).send({ msg: "Missing parameters. ", erro: erro });
   }
 };
 
