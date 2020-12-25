@@ -67,7 +67,7 @@ router.get("/read/event/:id", (req, res) => {
 
 /*@desc UPDATE 1 EVENT REQUIRES: NAME & OWNER 
  @route POST /db_api/update/event */
-router.post("/update/event", (req, res) => {
+router.put("/update/event", (req, res) => {
   //Destructure out params for query
   const { id, owner, name, description } = url.parse(req.url, true).query;
 
@@ -96,7 +96,7 @@ router.post("/update/event", (req, res) => {
 
 /*@desc Error check 
  @route GET /db_api/destroy/event/ */
-router.get("/destroy/event/", (req, res) => {
+router.delete("/destroy/event/", (req, res) => {
   res
     .status(200)
     .send({ msg: "Missing parameter. Please pass an id to delete event." });
@@ -104,7 +104,7 @@ router.get("/destroy/event/", (req, res) => {
 
 /*@desc Deletes an entry from DB 
  @route GET /db_api/destroy/event/:id */
-router.get("/destroy/event/:id", (req, res) => {
+router.delete("/destroy/event/:id", (req, res) => {
   const id = req.params.id;
   if (id) {
     models.Event.destroy({
