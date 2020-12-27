@@ -5,11 +5,11 @@ const eventCreateErrors = (req, res, next) => {
   if (name && description && owner) {
     next();
   } else {
-    let errors = "Problem with body parameters. Missing JSON data. ";
-    if (!name) errors += " Missing name. ";
-    if (!description) errors += "Missing description. ";
-    if (!owner) errors += "Missing owner. ";
-    res.status(200).send({ msg: "Missing parameters. ", erro: erro });
+    let errors = "Missing JSON data.";
+    if (!name) errors += "Missing name.";
+    if (!description) errors += "Missing description.";
+    if (!owner) errors += "Missing owner.";
+    res.status(206).send({ errors: { msg: errors } });
   }
 };
 

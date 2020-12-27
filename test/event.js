@@ -22,6 +22,40 @@ describe("/GET ping", () => {
 });
 
 /* ----------CREATE---------- */
+describe("/post event", () => {
+  it("it should fail to POST a new event because of missing parameters for owner and description", (done) => {
+    chai
+      .request(server)
+      .post("/db_api/create/event")
+      // .send({ name: "Tob Squad" })
+      .end((err, res) => {
+        res.should.have.status(206);
+        res.body.should.be.a("object");
+        res.body.errors.should.have
+          .property("msg")
+          .eql(
+            "Missing JSON data.Missing name.Missing description.Missing owner."
+          );
+      });
+    done();
+  });
+});
+describe("/post event dupe", () => {
+  it("it should fail to POST a new event because of duplicate entry with name and owner passed", (done) => {
+    chai
+      .request(server)
+      .post("/db_api/create/event")
+      .send({ name: "Parade", owner: "Naomi", description: "OSRS" })
+      .end((err, res) => {
+        res.should.have.status(409); //Problem with current server
+        res.body.should.be.a("object");
+        res.body.errors.should.have
+          .property("msg")
+          .eql("Event already exists with name and owner");
+        done();
+      });
+  });
+});
 
 /* ----------READ--------- */
 describe("/GET events", () => {
@@ -73,32 +107,6 @@ describe("/GET event error", () => {
       });
   });
 });
-
-//unit test for read ONE event
-//should have status 200
-//should be an object
-//should have a property event
-//should be of length 1
-
-//unit test for create route WORKING
-//describe /post
-//should have status 201//Created response
-//should be an object
-//should have a property event
-//should have a property msg
-
-//unit test for create route where you try to create a dupe
-//describe /post
-//should have status 409//Conflict with current state of the server
-//should be an object
-//should have an error with property of msg
-
-//unit test for create route when missing a parameter
-//describe /post
-//should have a status 206//Partial content error code
-//should be an object
-//should have a property msg
-//should have an error msg
 
 /* ---------UPDATE---------- */
 /* --------DESTROY---------- */

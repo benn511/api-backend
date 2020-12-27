@@ -26,9 +26,8 @@ router.post("/create/event", (req, res) => {
     if (created) {
       res.status(200).send({ msg: "New event created", event: event });
     } else {
-      res.status(200).send({
-        msg: "Event already exists with that name",
-        event: event,
+      res.status(409).send({
+        errors: { msg: "Event already exists with name and owner" },
       });
     }
   });
