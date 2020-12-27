@@ -54,14 +54,16 @@ router.get("/read/event/:id", (req, res) => {
             msg: "Successfully found an event with id passed",
           });
         } else {
-          res.status(200).send({ msg: "Could not find event with id passed" });
+          res.status(200).send({
+            errors: { id: "Could not find event with id passed" },
+          });
         }
       })
       .catch((err) => {
-        res.status(200).send({ msg: err, extra: "This is err" });
+        res.status(200).send({ errors: { msg: err } });
       });
   } else {
-    res.status(200).send({ msg: "Invalid event id passed. " });
+    res.status(200).send({ errors: { id: "Invalid event id passed." } });
   }
 });
 
