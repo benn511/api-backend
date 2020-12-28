@@ -20,11 +20,11 @@ const eventUpdateErrors = (req, res, next) => {
   if (id && (owner || name || description)) {
     next();
   } else if (id) {
-    res.status(200).send({
-      msg: "id passed but missing owner, name, or description to update.",
+    res.status(206).send({
+      errors: { msg: "id passed but missing owner, name, or description." },
     });
   } else {
-    res.status(200).send({ msg: "Cannot update without an id. " });
+    res.status(206).send({ errors: { msg: "Cannot update without an id. " } });
   }
   // next();
 };

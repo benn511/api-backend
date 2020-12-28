@@ -69,8 +69,7 @@ router.get("/read/event/:id", (req, res) => {
 /*@desc UPDATE 1 EVENT REQUIRES: NAME & OWNER 
  @route POST /db_api/update/event */
 router.put("/update/event", (req, res) => {
-  //Destructure out params for query
-  const { id, owner, name, description } = url.parse(req.url, true).query;
+  const { id, owner, name, description } = req.body;
 
   // Update specific event to new changes
   models.Event.update(
