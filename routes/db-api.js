@@ -66,7 +66,7 @@ router.get("/read/event/:id", (req, res) => {
   }
 });
 
-/*@desc UPDATE 1 EVENT REQUIRES: NAME & OWNER 
+/*@desc UPDATE 1 EVENT REQUIRES: ID
  @route POST /db_api/update/event */
 router.put("/update/event", (req, res) => {
   const { id, owner, name, description } = req.body;
@@ -89,7 +89,9 @@ router.put("/update/event", (req, res) => {
           msg: `Updated event with id: ${event.event_id}`,
         });
       } else {
-        res.status(200).send({ msg: `Could not find event with id: ${id}` });
+        res
+          .status(409)
+          .send({ errors: { msg: `Could not find event with id: ${id}` } });
       }
     });
   });

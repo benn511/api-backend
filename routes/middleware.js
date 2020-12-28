@@ -1,10 +1,13 @@
 const url = require("url");
+
+/* Checks for missing data needed to create new event */
 const eventCreateErrors = (req, res, next) => {
   console.log("Passing through create errors");
   const { name, description, owner } = req.body;
   if (name && description && owner) {
     next();
   } else {
+    //Allows for more specific error checking
     let errors = "Missing JSON data.";
     if (!name) errors += "Missing name.";
     if (!description) errors += "Missing description.";
@@ -13,10 +16,10 @@ const eventCreateErrors = (req, res, next) => {
   }
 };
 
+/* Checks for missing id needed to update an event */
 const eventUpdateErrors = (req, res, next) => {
   console.log("Passed thru middleware");
   const { id, owner, name, description } = req.body;
-  // I need an id for sure
   if (id && (owner || name || description)) {
     next();
   } else if (id) {
@@ -26,8 +29,6 @@ const eventUpdateErrors = (req, res, next) => {
   } else {
     res.status(206).send({ errors: { msg: "Cannot update without an id. " } });
   }
-  // next();
 };
 
-// C U D Error checking
 module.exports = { eventCreateErrors, eventUpdateErrors };

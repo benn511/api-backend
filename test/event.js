@@ -117,15 +117,36 @@ describe("/PUT update event", () => {
       .send({
         id: 5,
         name: "sdf",
-        owner: "Benny",
         description: "changed again",
+        owner: "Benny",
       })
       .end((err, res) => {
         res.should.have.status(200);
         res.body.should.be.a("object");
+        res.body.should.have.property("msg").eql("Updated event with id: 5");
+        res.body.should.have.property("event");
+        done();
+      });
+  });
+});
+
+describe("/PUT update event", () => {
+  it("it should fail PUT an update to an event that doesn't exist", (done) => {
+    chai
+      .request(server)
+      .put("/db_api/update/event")
+      .send({
+        id: 99999,
+        name: "sdf",
+        description: "changed again",
+        owner: "Benny",
+      })
+      .end((err, res) => {
+        res.should.have.status(409);
+        res.body.should.be.a("object");
         res.body.errors.should.have
           .property("msg")
-          .eql("Updated event with id: 5");
+          .eql("Could not find event with id: 99999");
         done();
       });
   });
