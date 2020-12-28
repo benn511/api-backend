@@ -15,7 +15,7 @@ const eventCreateErrors = (req, res, next) => {
 
 const eventUpdateErrors = (req, res, next) => {
   console.log("Passed thru middleware");
-  const { id, owner, name, description } = url.parse(req.url, true).query;
+  const { id, owner, name, description } = req.body;
   // I need an id for sure
   if (id && (owner || name || description)) {
     next();

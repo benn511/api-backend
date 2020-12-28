@@ -109,4 +109,26 @@ describe("/GET event error", () => {
 });
 
 /* ---------UPDATE---------- */
+describe("/PUT update event", () => {
+  it("it should PUT an update to an existing event", (done) => {
+    chai
+      .request(server)
+      .put("/db_api/update/event")
+      .send({
+        id: 5,
+        name: "sdf",
+        owner: "Benny",
+        description: "changed again",
+      })
+      .end((err, res) => {
+        res.should.have.status(200);
+        res.body.should.be.a("object");
+        res.body.errors.should.have
+          .property("msg")
+          .eql("Updated event with id: 5");
+        done();
+      });
+  });
+});
+
 /* --------DESTROY---------- */

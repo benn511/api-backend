@@ -77,7 +77,8 @@ router.put("/update/event", (req, res) => {
     {
       where: { event_id: id },
     }
-  ).then(() => {
+  ).then((result) => {
+    console.log("Result of update: ", result);
     // return update group as JSON
     models.Event.findOne({
       where: { event_id: id },
@@ -85,7 +86,7 @@ router.put("/update/event", (req, res) => {
       if (event) {
         res.status(200).send({
           event: event,
-          msg: `Updated event with id: ${event.event_id}, Name: ${event.event_name}`,
+          msg: `Updated event with id: ${event.event_id}`,
         });
       } else {
         res.status(200).send({ msg: `Could not find event with id: ${id}` });
