@@ -14,6 +14,6 @@ npm start
 
 ## Usage
 
-npm i: installs needed dependencies
-npm test: Runs unit tests on routes and starts dev server
-npm start: starts dev server
+    npm i: installs needed dependencies
+    npm test: Runs unit tests on routes and starts dev server
+    npm start: starts dev server
